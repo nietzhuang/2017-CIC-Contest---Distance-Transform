@@ -14,7 +14,8 @@ module init(
         reg [9:0]       cnt_sti;  // count number of original image data.
         reg [3:0]       cnt_ini;  // count number of pixels of current sti_in.
         reg [13:0]      cnt_res;  // count number of result data input to res_ROM.
-        reg             sti_tmp15;
+        reg [7:0]       sti_tmp15;
+        wire [9:0]      sti_addr_tmp;
 
 
         assign  init_done = (cnt_res == 14'h3FFF);
@@ -43,7 +44,7 @@ module init(
 
         always@(posedge clk)begin
                 if(init_en)
-                        sti_tmp15 <= sti_di[0];
+                        sti_tmp15 <= {6'b0, sti_di[0]};
         end
         
         //Initial output to res_RAM.
@@ -61,13 +62,15 @@ module init(
         always@*begin
                 res_addr_init = cnt_res;
         end
-
+        
+        assign sti_addr_tmp = cnt_ini+1;
+        
         always@*begin
                 if(init_en_2)begin
                         if(cnt_ini == 4'hF)
                                 res_do_init = 8'h00 | sti_tmp15;  // fix the sti_addr mismatch problem.
                         else
-                                res_do_init = 8'h00 | sti_di[cnt_ini+1];  // write to ROM delay one cycle to read RAM.
+                                res_do_init = 8'h00 | {7'b0, sti_di[sti_addr_tmp]};  // write to ROM delay one cycle to read RAM.
                 end
                 else
                         res_do_init = 8'h00;
