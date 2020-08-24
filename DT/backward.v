@@ -13,10 +13,10 @@ module backward(
 
         reg [13:0]      cur;   // the current pixel.
         reg [2:0]       cnt_back;  // count 0 to 4 is load phase, count 5 to 6 is output phase.
-        reg [4:0]       pixel_tmp[7:0];
+        reg [7:0]       pixel_tmp[4:0];
         reg             back_op_done;
 
-        reg [13:0]      min_tmp0, min_tmp1, min_tmp2, back_out;
+        reg [7:0]      min_tmp0, min_tmp1, min_tmp2, back_out;
 
 
         assign pass = (cur[6:0] == 7'b0) || (cur[6:0] == 7'h7F);
@@ -79,10 +79,10 @@ module backward(
                         back_out = (min_tmp0 <= min_tmp2)? min_tmp0 : min_tmp2;
                 end
                 else begin
-                        min_tmp0 = 14'd0;
-                        min_tmp1 = 14'd0;
-                        min_tmp2 = 14'd0;
-                        back_out = 14'd0;
+                        min_tmp0 = 7'd0;
+                        min_tmp1 = 7'd0;
+                        min_tmp2 = 7'd0;
+                        back_out = 7'd0;
                 end
         end
 
@@ -90,6 +90,6 @@ module backward(
                 if(cnt_back >= 3'd5)
                         res_do_back = back_out;
                 else
-                        res_do_back = 14'd0;
+                        res_do_back = 7'd0;
         end
 endmodule
