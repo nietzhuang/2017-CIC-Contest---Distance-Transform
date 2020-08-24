@@ -13,9 +13,9 @@ module forward(
 
         reg [13:0]      cur;   // the current pixel.
         reg [2:0]       cnt_for;  // count 0 to 4 is load phase, count 5 to 6 is output phase.
-        reg [4:0]       pixel_tmp[7:0];
+        reg [7:0]       pixel_tmp[4:0];
 
-        reg [13:0]      min_tmp0, min_tmp1, for_out;
+        reg [7:0]      min_tmp0, min_tmp1, for_out;
 
 
         assign pass = (cur[6:0] == 7'b0) || (cur[6:0] == 7'h7F) || (cur>= 14'h3F80) || (for_load_en && (cnt_for == 3'd0) && (res_di == 8'd0));
@@ -80,9 +80,9 @@ module forward(
                         for_out = (min_tmp0 <= min_tmp1)? min_tmp0+1 : min_tmp1+1;
                 end
                 else begin
-                        min_tmp0 = 14'd0;
-                        min_tmp1 = 14'd0;
-                        for_out = 14'd0;
+                        min_tmp0 = 7'd0;
+                        min_tmp1 = 7'd0;
+                        for_out = 7'd0;
                 end
         end
 
@@ -91,6 +91,6 @@ module forward(
                 if(cnt_for >= 3'd5)
                         res_do_for = for_out;
                 else
-                        res_do_for = 14'd0;
+                        res_do_for = 7'd0;
         end
 endmodule
